@@ -22,5 +22,8 @@ app.get('/',(req,res)=>{
     res.status(200).send(person)
 })
 
+app.get('/name',(req,res)=>{
+    res.status.send('<h1>MD SOHIDUL ISLAM</h1>')
+})
 
 app.listen(process.env.PORT || 4002)
