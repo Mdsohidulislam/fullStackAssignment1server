@@ -54,6 +54,36 @@ client.connect(err => {
         }
     })
     
+    app.get('/allWorks',(req,res)=>{ 
+        const Bearer=req.headers.authorization;
+        const queryEmail=req.query.email;
+
+        if(Bearer && Bearer.startsWith('Honest')){
+            const idToken=Bearer.split(' ')[1]; 
+
+            admin
+            .auth()
+            .verifyIdToken(idToken)
+            .then((decodedToken) => {
+            const uid = decodedToken.email; 
+                
+            if(uid ==queryEmail){
+                        userWorkCollection.find({})
+                        .toArray((err,docs)=>{
+                            res.status(200).send(docs)
+                        })
+            }
+            })
+            .catch((error) => {
+                res.status(401).send('unAuthorized access')
+            });
+        }else{
+            res.status(401).send('unAuthorized access')
+        }
+    })
+    
+
+
 
     app.get('/works',(req,res)=>{
 
