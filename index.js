@@ -26,9 +26,7 @@ client.connect(err => {
     const collection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTION}`);
     const userWorkCollection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTIONFROMUSER}`);
 
-    
-    app.get('/volunteers',(req,res)=>{
-        // console.log(req.headers.authorization);
+    app.get('/volunteers',(req,res)=>{ 
         const Bearer=req.headers.authorization;
         const queryEmail=req.query.email;
 
@@ -54,7 +52,8 @@ client.connect(err => {
         }else{
             res.status(401).send('unAuthorized access')
         }
-
+    })
+    
 
     app.get('/works',(req,res)=>{
 
@@ -98,5 +97,5 @@ app.get('/name',(req,res)=>{
 })
 
 app.listen(process.env.PORT || 4003,()=>{
-    console.log("Server is running on PORT 4003");
+    console.log("Server is running on PORT 4003")
 })
