@@ -9,11 +9,6 @@ const app=express();
 app.use(bodyParser.json())
 app.use(cors());
 
-// https://git.heroku.com/gentle-hollows-19917.git
-// https://gentle-hollows-19917.herokuapp.com/
-
-// console.log(process.env.USER);
-
 
 
 
