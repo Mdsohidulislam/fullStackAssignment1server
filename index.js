@@ -3,12 +3,18 @@ const bodyParser=require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const cors=require('cors'); 
 require('dotenv').config()
-
+var admin = require("firebase-admin");
 
 const app=express();
 app.use(bodyParser.json())
 app.use(cors());
 
+
+var serviceAccount = require("./an-honest-volunteer-firebase-adminsdk-xy1uq-8031c9431d.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 
 
@@ -19,6 +25,36 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     const collection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTION}`);
     const userWorkCollection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTIONFROMUSER}`);
+
+    
+    app.get('/volunteers',(req,res)=>{
+        // console.log(req.headers.authorization);
+        const Bearer=req.headers.authorization;
+        const queryEmail=req.query.email;
+
+        if(Bearer && Bearer.startsWith('Honest')){
+            const idToken=Bearer.split(' ')[1]; 
+
+            admin
+            .auth()
+            .verifyIdToken(idToken)
+            .then((decodedToken) => {
+            const uid = decodedToken.email; 
+                
+            if(uid ==queryEmail){
+                        userWorkCollection.find({email:queryEmail})
+                        .toArray((err,docs)=>{
+                            res.status(200).send(docs)
+                        })
+            }
+            })
+            .catch((error) => {
+                res.status(401).send('unAuthorized access')
+            });
+        }else{
+            res.status(401).send('unAuthorized access')
+        }
+
 
     app.get('/works',(req,res)=>{
 
