@@ -101,6 +101,10 @@ client.connect(err => {
         })
     })
 
+    app.delete('/delete/:id',(req,res)=>{
+        console.log(req.params.id);
+    })
+
     app.post('/userWork',(req,res)=>{
         const work=req.body;
 
