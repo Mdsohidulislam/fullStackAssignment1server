@@ -141,15 +141,6 @@ client.connect(err => {
 
 
 
-
-app.get('/',(req,res)=>{
-    res.status(200).send('<h1>Hello world </h1>')
-})
-
-app.get('/name',(req,res)=>{
-    res.status(200).send('<h1>MD SOHIDUL ISLAM</h1>')
-})
-
 app.listen(process.env.PORT || 4003,()=>{
     console.log("Server is running on PORT 4003")
 })
