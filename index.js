@@ -1,6 +1,7 @@
 const express=require('express');
 const bodyParser=require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const { ObjectId } = require('mongodb');
 const cors=require('cors'); 
 require('dotenv').config()
 var admin = require("firebase-admin");
@@ -56,6 +57,8 @@ client.connect(err => {
     })
     
     app.delete('/delete/:id',(req,res)=>{
+
+        console.log(req.params.id);
 
         userWorkCollection.deleteOne({_id:ObjectId(`${req.params.id}`)})
         .then(result => res.send(result))
