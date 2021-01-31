@@ -7,6 +7,7 @@ var admin = require("firebase-admin");
 
 const app=express();
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 
@@ -25,7 +26,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     const collection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTION}`);
     const userWorkCollection = client.db(`${process.env.NAME}`).collection(`${process.env.COLLECTIONFROMUSER}`);
-
+    
     app.get('/volunteers',(req,res)=>{ 
         const Bearer=req.headers.authorization;
         const queryEmail=req.query.email;
@@ -54,6 +55,18 @@ client.connect(err => {
         }
     })
     
+    app.delete('/delete/:id',(req,res)=>{
+
+        userWorkCollection.deleteOne({_id:ObjectId(`${req.params.id}`)})
+        .then(result => res.send(result))
+    })
+
+    app.post('/addEvent',(req,res)=>{ 
+        userWorkCollection.insertOne(req.body)
+        .then(result => res.status(200).send(result))
+    })
+
+
     app.get('/allWorks',(req,res)=>{ 
         const Bearer=req.headers.authorization;
         const queryEmail=req.query.email;
@@ -83,6 +96,9 @@ client.connect(err => {
     })
     
 
+    app.post('/many',(req,res)=>{
+        console.log(req.body);
+    })
 
 
     app.get('/works',(req,res)=>{
@@ -102,7 +118,8 @@ client.connect(err => {
     })
 
     app.delete('/delete/:id',(req,res)=>{
-        console.log(req.params.id);
+        userWorkCollection.deleteOne({_id:req.params.id})
+        .then(result => res.send(result))
     })
 
     app.post('/userWork',(req,res)=>{
